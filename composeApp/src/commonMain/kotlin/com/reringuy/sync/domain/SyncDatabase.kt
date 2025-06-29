@@ -1,6 +1,7 @@
 
 package com.reringuy.sync.domain
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
@@ -18,12 +19,13 @@ import kotlin.time.ExperimentalTime
     version = 1
 )
 @TypeConverters(InstantConverter::class)
+@ConstructedBy(AppDatabaseConstructor::class)
 abstract class SyncDatabase : RoomDatabase() {
     abstract fun basicDataDao(): BasicDataDao
 }
 
 @ExperimentalTime
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@Suppress("KotlinNoActualForExpect")
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<SyncDatabase> {
     override fun initialize(): SyncDatabase
 }

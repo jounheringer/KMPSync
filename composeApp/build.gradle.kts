@@ -28,6 +28,10 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             linkerOpts.add("-lsqlite3")
+            freeCompilerArgs += listOf(
+                "-Xbinary=bundleId=com.reringuy.sync",
+                "-Xexport-kdoc",
+            )
         }
     }
 
@@ -53,12 +57,16 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
+        iosMain.dependencies {
+            implementation(kotlin("stdlib"))
+        }
     }
 
     targets.configureEach {
         compilations.configureEach {
             compileTaskProvider.get().compilerOptions {
-                freeCompilerArgs.add("-Xexpect-actual-classes")
+                freeCompilerArgs.addAll("-Xexpect-actual-classes", "-opt-in=kotlin.time.ExperimentalTime")
             }
         }
     }
@@ -69,11 +77,11 @@ room {
 }
 
 dependencies {
+    ksp(libs.room.compiler)
     add("kspAndroid", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
-    ksp(libs.room.compiler)
 }
 
 android {
@@ -112,3 +120,16 @@ tasks.withType<KotlinCompile>().configureEach {
         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
     }
 }
+
+tasks.matching {
+    it.name in listOf(
+        "linkReleaseFrameworkIosArm64",
+        "linkReleaseFrameworkIosSimulatorArm64",
+        "createReleaseApkListingFileRedirect",
+        "linkReleaseFrameworkIosX64",
+        "packageRelease"
+    )
+}.configureEach {
+    onlyIf { gradle.startParameter.taskNames.any { it.contains("Release", ignoreCase = true) } }
+}
+
