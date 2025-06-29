@@ -16,6 +16,8 @@ kotlin = "2.2.0"
 ksp = "2.2.0-2.0.2"
 room = "2.7.2"
 sqlite = "2.5.2"
+koin = "4.1.0"
+koin-annotation = "2.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -34,6 +36,13 @@ room-runtime-android = { module = "androidx.room:room-runtime-android", version.
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "ksp" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
