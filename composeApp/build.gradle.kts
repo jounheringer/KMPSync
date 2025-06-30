@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,9 +10,18 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.ktorfit)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
 }
 
 kotlin {
+    androidTarget()
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -59,6 +69,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.ktorfit.lib)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -88,11 +99,19 @@ room {
 }
 
 dependencies {
-    ksp(libs.room.compiler)
+    add("kspCommonMainMetadata", libs.ksp.compiler)
+
+    add("kspAndroid", libs.ktorfit.ksp)
     add("kspAndroid", libs.room.compiler)
+
     add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.ktorfit.ksp)
+
     add("kspIosX64", libs.room.compiler)
+    add("kspIosX64", libs.ktorfit.ksp)
+
     add("kspIosArm64", libs.room.compiler)
+    add("kspIosArm64", libs.ktorfit.ksp)
 }
 
 android {
@@ -135,9 +154,15 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+        freeCompilerArgs.addAll("-opt-in=kotlin.time.ExperimentalTime", "-Xprint-constructor-signatures")
     }
 }
 
@@ -152,4 +177,3 @@ tasks.matching {
 }.configureEach {
     onlyIf { gradle.startParameter.taskNames.any { it.contains("Release", ignoreCase = true) } }
 }
-
