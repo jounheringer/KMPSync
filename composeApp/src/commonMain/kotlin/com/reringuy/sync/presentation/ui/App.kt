@@ -17,13 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.reringuy.sync.model.entity.BasicData
-import com.reringuy.sync.utils.formatToString
+import com.reringuy.sync.presentation.viewmodel.MainAppViewmodel
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import kotlin.time.Clock
+import org.koin.compose.koinInject
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    viewmodel: MainAppViewmodel = koinInject<MainAppViewmodel>()
+) {
     MaterialTheme {
         Column(
             modifier = Modifier.padding(16.dp).fillMaxSize(),
@@ -46,59 +48,59 @@ fun App() {
 fun AppDataTable() {
     val auxList = listOf(
         BasicData(
-            id = 1,
+            uid = 1,
+            id = null,
             firstName = "joao",
             lastName = "ribeiro",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "maria",
             lastName = "bruce",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "gabriel",
             lastName = "san diego",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "maria",
             lastName = "bruce",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "gabriel",
             lastName = "san diego",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "gabriel",
             lastName = "san diego",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "maria",
             lastName = "bruce",
-            createdAt = Clock.System.now(),
             synced = false
         ),
         BasicData(
-            id = 3,
+            uid = 1,
+            id = null,
             firstName = "gabriel",
             lastName = "san diego",
-            createdAt = Clock.System.now(),
             synced = false
         )
     )
@@ -128,7 +130,6 @@ fun AppDataTable() {
                 Text(text = "${it.id}")
                 Text(text = "${it.firstName}")
                 Text(text = "${it.lastName}")
-                Text(text = it.createdAt.formatToString())
                 Text(text = "${it.synced}")
             }
         }

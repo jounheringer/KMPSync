@@ -66,7 +66,6 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.annotations)
             implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.kotlinx.datetime)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.ktorfit.lib)
@@ -84,7 +83,10 @@ kotlin {
     targets.configureEach {
         compilations.configureEach {
             compileTaskProvider.get().compilerOptions {
-                freeCompilerArgs.addAll("-Xexpect-actual-classes", "-opt-in=kotlin.time.ExperimentalTime")
+                freeCompilerArgs.addAll(
+                    "-Xexpect-actual-classes",
+                    "-opt-in=kotlin.time.ExperimentalTime"
+                )
             }
         }
     }
@@ -92,6 +94,7 @@ kotlin {
 
 ksp {
     arg("koin.generated", "true")
+    arg("KOIN_DEFAULT_MODULE","true")
 }
 
 room {
@@ -162,7 +165,10 @@ tasks.withType<KotlinCompilationTask<*>>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        freeCompilerArgs.addAll("-opt-in=kotlin.time.ExperimentalTime", "-Xprint-constructor-signatures")
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.time.ExperimentalTime",
+            "-Xprint-constructor-signatures"
+        )
     }
 }
 

@@ -2,17 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "75d16fb4c69bf9336863a7293d8bdc4a",
+    "identityHash": "635c39782ea81fe4cc8e9aac3d866494",
     "entities": [
       {
         "tableName": "BasicData",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `first_name` TEXT, `last_name` TEXT, `created_at` INTEGER NOT NULL, `synced` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER, `first_name` TEXT, `last_name` TEXT, `synced` INTEGER NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "firstName",
@@ -25,12 +30,6 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "createdAt",
-            "columnName": "created_at",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "synced",
             "columnName": "synced",
             "affinity": "INTEGER",
@@ -40,14 +39,14 @@
         "primaryKey": {
           "autoGenerate": true,
           "columnNames": [
-            "id"
+            "uid"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75d16fb4c69bf9336863a7293d8bdc4a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '635c39782ea81fe4cc8e9aac3d866494')"
     ]
   }
 }

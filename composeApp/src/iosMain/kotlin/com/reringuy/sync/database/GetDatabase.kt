@@ -9,7 +9,6 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 fun getDatabaseBuilder(): RoomDatabase.Builder<SyncDatabase> {
     val dbFilePath = documentDirectory() + "/my_room.db"
     return Room.databaseBuilder<SyncDatabase>(

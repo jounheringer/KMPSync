@@ -11,10 +11,13 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 interface BasicDataDao {
     @Query("SELECT * FROM basicdata")
-    fun getAllBasicData(): Flow<List<BasicData>>
+    suspend fun getAllBasicData(): List<BasicData>
 
     @Upsert
     suspend fun upsertBasicData(basicData: BasicData)
+
+    @Upsert
+    suspend fun upsertAllBasicData(basicDatas: List<BasicData>)
 
     @Query("DELETE FROM basicdata WHERE id = :id")
     suspend fun deleteBasicData(id: Int)

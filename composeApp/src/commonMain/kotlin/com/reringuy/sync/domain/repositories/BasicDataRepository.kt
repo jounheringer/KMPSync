@@ -1,8 +1,24 @@
 package com.reringuy.sync.domain.repositories
 
+import com.reringuy.sync.domain.dao.BasicDataDao
 import com.reringuy.sync.domain.services.BasicDataService
+import com.reringuy.sync.model.entity.BasicData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class BasicDataRepository(
-    private val service: BasicDataService
+    private val service: BasicDataService,
+    private val dao: BasicDataDao
 ) {
+    fun getAllBasicData(): Flow<List<BasicData>> = flow {
+        emit(dao.getAllBasicData())
+
+        try {
+            val dataList = service.getAllBasicData()
+            dao.upsertAllBasicData(dataList)
+            emit(dataList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
