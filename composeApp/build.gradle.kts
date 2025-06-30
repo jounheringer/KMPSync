@@ -111,9 +111,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
-        getByName("release") {
+        debug {
+            aaptOptions.cruncherEnabled = false
+        }
+        release {
             isMinifyEnabled = false
+            aaptOptions.cruncherEnabled = true
         }
     }
     compileOptions {

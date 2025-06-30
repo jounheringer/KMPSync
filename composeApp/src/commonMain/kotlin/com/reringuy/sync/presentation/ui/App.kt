@@ -1,4 +1,4 @@
-package com.reringuy.sync
+package com.reringuy.sync.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
