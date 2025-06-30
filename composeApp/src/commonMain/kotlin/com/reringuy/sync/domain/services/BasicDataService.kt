@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface BasicDataService {
     @GET("all")
-    fun getAllBasicData(): List<BasicData>
+    suspend fun getAllBasicData(): List<BasicData>
 
     @POST("random-data")
-    fun generateRandomData(): Flow<BasicData>
+    suspend fun generateRandomData(): Flow<BasicData>
 
     @POST("sync-data")
-    fun syncBasicData(@Body basicData: BasicData): Flow<BasicData>
+    suspend fun syncBasicData(@Body basicData: BasicData): Flow<BasicData>
 }

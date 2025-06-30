@@ -1,6 +1,7 @@
 
 package com.reringuy.sync.domain
 
+import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -9,10 +10,12 @@ import com.reringuy.sync.domain.dao.BasicDataDao
 import com.reringuy.sync.model.entity.BasicData
 
 @Database(
-    entities = [
-        BasicData::class
-    ],
-    version = 1
+    entities = [BasicData::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
 )
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class SyncDatabase : RoomDatabase() {

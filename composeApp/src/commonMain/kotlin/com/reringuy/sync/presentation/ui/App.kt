@@ -17,27 +17,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.reringuy.sync.model.entity.BasicData
+import com.reringuy.sync.presentation.components.Loading
+import com.reringuy.sync.presentation.components.LoadingComponent
+import com.reringuy.sync.presentation.reducer.MainAppReducer
+import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppState
 import com.reringuy.sync.presentation.viewmodel.MainAppViewmodel
+import com.reringuy.sync.utils.OperationHandler
+import com.reringuy.sync.utils.rememberFlowWithLifecycle
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Composable
+fun AppWrapper(
+    viewmodel: MainAppViewmodel = koinInject<MainAppViewmodel>()
+) {
+    val state by viewmodel.state.collectAsState()
+    val effects = rememberFlowWithLifecycle(viewmodel.effect)
+
+    LaunchedEffect(effects) {
+        effects.collect {
+            when(it) {
+                is MainAppReducer.MainAppEffects.ShowError -> {
+                    println(it.message)
+                }
+            }
+        }
+    }
+
+    LoadingComponent(state.loading) {
+        App(state, viewmodel::generateRandomData)
+    }
+}
+@Composable
 @Preview
 fun App(
-    viewmodel: MainAppViewmodel = koinInject<MainAppViewmodel>()
+    state: MainAppState,
+    onAddNewData: () -> Unit
 ) {
     MaterialTheme {
         Column(
-            modifier = Modifier.padding(16.dp).fillMaxSize(),
+            modifier = Modifier.padding(16.dp, 32.dp).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AppDataTable()
+            AppDataTable(state.basicData)
             Column(
                 modifier = Modifier.fillMaxSize().padding(0.dp, 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                AppAddData()
+                AppAddData(onAddNewData)
                 AppSyncData()
             }
         }
@@ -45,100 +73,55 @@ fun App(
 }
 
 @Composable
-fun AppDataTable() {
-    val auxList = listOf(
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "joao",
-            lastName = "ribeiro",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "maria",
-            lastName = "bruce",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "gabriel",
-            lastName = "san diego",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "maria",
-            lastName = "bruce",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "gabriel",
-            lastName = "san diego",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "gabriel",
-            lastName = "san diego",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "maria",
-            lastName = "bruce",
-            synced = false
-        ),
-        BasicData(
-            uid = 1,
-            id = null,
-            firstName = "gabriel",
-            lastName = "san diego",
-            synced = false
-        )
-    )
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+fun AppDataTable(
+    data: OperationHandler<MutableList<BasicData>>
+) {
+    when(data) {
+        is OperationHandler.Failure -> {
+            Text(text = data.message)
+        }
+        is OperationHandler.Success<*> -> {
+            val dataList = (data as OperationHandler.Success<MutableList<BasicData>>).data
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Id")
-                Text(text = "First Name")
-                Text(text = "Last Name")
-                Text(text = "Date Created")
-                Text(text = "Synced")
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Id")
+                        Text(text = "UID")
+                        Text(text = "First Name")
+                        Text(text = "Last Name")
+                        Text(text = "Synced")
+                    }
+                }
+                items(dataList) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "${it.id}")
+                        Text(text = "${it.uid}")
+                        Text(text = "${it.firstName}")
+                        Text(text = "${it.lastName}")
+                        Text(text = "${it.synced}")
+                    }
+                }
             }
         }
-        items(auxList) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "${it.id}")
-                Text(text = "${it.firstName}")
-                Text(text = "${it.lastName}")
-                Text(text = "${it.synced}")
-            }
-        }
+        else -> Loading()
     }
+
 }
 
 @Composable
-fun AppAddData() {
-    Button(onClick = {}) {
+fun AppAddData(onAddNewData: () -> Unit) {
+    Button(onClick = onAddNewData) {
         Text(text = "Add Data")
     }
 }

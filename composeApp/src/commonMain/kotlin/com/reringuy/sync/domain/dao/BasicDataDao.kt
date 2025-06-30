@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.reringuy.sync.model.entity.BasicData
-import kotlinx.coroutines.flow.Flow
 import kotlin.time.ExperimentalTime
 
 @Dao
@@ -14,7 +13,7 @@ interface BasicDataDao {
     suspend fun getAllBasicData(): List<BasicData>
 
     @Upsert
-    suspend fun upsertBasicData(basicData: BasicData)
+    suspend fun upsertBasicData(basicData: BasicData): Long
 
     @Upsert
     suspend fun upsertAllBasicData(basicDatas: List<BasicData>)

@@ -1,6 +1,7 @@
 package com.reringuy.sync
 
 import androidx.compose.ui.window.ComposeUIViewController
-import com.reringuy.sync.presentation.ui.App
+import com.reringuy.sync.presentation.ui.AppWrapper
 
-fun MainViewController() = ComposeUIViewController { App() }
+@Suppress("UNUSED")
+fun MainViewController() = ComposeUIViewController { AppWrapper() }
