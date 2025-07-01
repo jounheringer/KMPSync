@@ -3,10 +3,10 @@ package com.reringuy.sync.modules
 import com.reringuy.sync.database.getDatabaseBuilder
 import com.reringuy.sync.domain.SyncDatabase
 import com.reringuy.sync.domain.getRoomDatabase
+import com.reringuy.sync.domain.provideKtorfit
 import com.reringuy.sync.domain.repositories.BasicDataRepository
 import com.reringuy.sync.domain.services.createBasicDataService
 import com.reringuy.sync.presentation.viewmodel.MainAppViewmodel
-import com.reringuy.sync.utils.BaseURL
 import de.jensklingenberg.ktorfit.Ktorfit
 import org.koin.dsl.module
 
@@ -18,7 +18,3 @@ actual fun getMainModule() = module {
     single { BasicDataRepository(get(), get()) }
     factory { MainAppViewmodel(get()) }
 }
-
-fun provideKtorfit() = Ktorfit.Builder()
-    .baseUrl(BaseURL.BASE_URL)
-    .build()
