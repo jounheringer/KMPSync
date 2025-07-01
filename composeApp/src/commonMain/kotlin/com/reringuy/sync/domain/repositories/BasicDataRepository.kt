@@ -17,19 +17,27 @@ class BasicDataRepository(
 
         try {
             val dataList = service.getAllBasicData()
-            if (dataList is ApiResponse.Success) {
-                dao.upsertAllBasicData(dataList.data)
-                emit(dataList.data)
-            }
+            dao.upsertAllBasicData(dataList)
+            emit(dataList)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun saveData(basicData: BasicData): Flow<OperationHandler<BasicData>> = flow {
+    fun saveLocalData(basicData: BasicData): Flow<OperationHandler<BasicData>> = flow {
         try {
             val auxId = dao.upsertBasicData(basicData)
             emit(OperationHandler.Success(basicData.apply { uid = auxId.toInt() }))
+        } catch (e: Exception) {
+            emit(OperationHandler.Failure(e.message ?: "Unknown error"))
+        }
+    }
+
+    fun syncData(basicDatas: List<BasicData>): Flow<OperationHandler<List<BasicData>>> = flow {
+        try {
+            val syncedData = service.syncBasicData(basicDatas)
+            dao.upsertAllBasicData(syncedData)
+            emit(OperationHandler.Success(dao.getAllBasicData()))
         } catch (e: Exception) {
             emit(OperationHandler.Failure(e.message ?: "Unknown error"))
         }

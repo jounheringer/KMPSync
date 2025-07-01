@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.ktorfit)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -51,8 +50,8 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
-            implementation(libs.ktor.client.android)
-
+            implementation(libs.room.runtime.android)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,13 +66,9 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.annotations)
-            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
-            implementation(libs.ktorfit.lib)
-            implementation(libs.ktor.serialization.json)
-            implementation(libs.ktor.content.negotiation)
-            implementation(libs.ktor.client.core)
+            implementation(libs.bundles.ktor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -91,7 +86,6 @@ kotlin {
             compileTaskProvider.get().compilerOptions {
                 freeCompilerArgs.addAll(
                     "-Xexpect-actual-classes",
-                    "-opt-in=kotlin.time.ExperimentalTime"
                 )
             }
         }
@@ -100,7 +94,7 @@ kotlin {
 
 ksp {
     arg("koin.generated", "true")
-    arg("KOIN_DEFAULT_MODULE","true")
+    arg("KOIN_DEFAULT_MODULE", "true")
 }
 
 room {
@@ -110,17 +104,13 @@ room {
 dependencies {
     add("kspCommonMainMetadata", libs.ksp.compiler)
 
-    add("kspAndroid", libs.ktorfit.ksp)
     add("kspAndroid", libs.room.compiler)
 
     add("kspIosSimulatorArm64", libs.room.compiler)
-    add("kspIosSimulatorArm64", libs.ktorfit.ksp)
 
     add("kspIosX64", libs.room.compiler)
-    add("kspIosX64", libs.ktorfit.ksp)
 
     add("kspIosArm64", libs.room.compiler)
-    add("kspIosArm64", libs.ktorfit.ksp)
 }
 
 android {
@@ -157,6 +147,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    lint {
+        disable.add("NullSafeMutableLiveData")
+    }
 }
 
 dependencies {
@@ -173,7 +167,6 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.time.ExperimentalTime",
-            "-Xprint-constructor-signatures"
         )
     }
 }

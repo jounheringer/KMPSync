@@ -38,6 +38,7 @@ fun AppWrapper(
         effects.collect {
             when(it) {
                 is MainAppReducer.MainAppEffects.ShowError -> {
+                    println("megaaaaaa")
                     println(it.message)
                 }
             }
@@ -45,14 +46,15 @@ fun AppWrapper(
     }
 
     LoadingComponent(state.loading) {
-        App(state, viewmodel::generateRandomData)
+        App(state, viewmodel::generateRandomData, viewmodel::syncBasicData)
     }
 }
 @Composable
 @Preview
 fun App(
     state: MainAppState,
-    onAddNewData: () -> Unit
+    onAddNewData: () -> Unit,
+    onSyncData: () -> Unit
 ) {
     MaterialTheme {
         Column(
@@ -66,7 +68,7 @@ fun App(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 AppAddData(onAddNewData)
-                AppSyncData()
+                AppSyncData(onSyncData)
             }
         }
     }
@@ -74,14 +76,14 @@ fun App(
 
 @Composable
 fun AppDataTable(
-    data: OperationHandler<MutableList<BasicData>>
+    data: OperationHandler<List<BasicData>>
 ) {
     when(data) {
         is OperationHandler.Failure -> {
             Text(text = data.message)
         }
-        is OperationHandler.Success<*> -> {
-            val dataList = (data as OperationHandler.Success<MutableList<BasicData>>).data
+        is OperationHandler.Success<List<BasicData>> -> {
+            val dataList = data.data
             LazyColumn(
                 modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -127,8 +129,8 @@ fun AppAddData(onAddNewData: () -> Unit) {
 }
 
 @Composable
-fun AppSyncData() {
-    Button(onClick = {}) {
+fun AppSyncData(onSyncData: () -> Unit) {
+    Button(onClick = onSyncData) {
         Text(text = "Sync Data")
     }
 }

@@ -1,20 +1,29 @@
 package com.reringuy.sync.domain.services
 
 import com.reringuy.sync.model.entity.BasicData
-import com.reringuy.sync.utils.ApiResponse
-import de.jensklingenberg.ktorfit.http.Body
-import de.jensklingenberg.ktorfit.http.GET
-import de.jensklingenberg.ktorfit.http.POST
-import kotlinx.coroutines.flow.Flow
+import com.reringuy.sync.utils.BaseURL
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 
+class BasicDataService(private val client: HttpClient) {
+    suspend fun getAllBasicData(): List<BasicData> {
+        val response: HttpResponse = client.get("${BaseURL.BASE_URL}/all")
+        return response.body()
+    }
 
-interface BasicDataService {
-    @GET("all")
-    suspend fun getAllBasicData(): ApiResponse<List<BasicData>>
+    suspend fun syncBasicData(data: List<BasicData>): List<BasicData> {
+        val response: HttpResponse = client.post("${BaseURL.BASE_URL}/sync-data") {
+            setBody(data)
+        }
+        return response.body()
+    }
 
-    @POST("random-data")
-    suspend fun generateRandomData(): ApiResponse<Flow<BasicData>>
-
-    @POST("sync-data")
-    suspend fun syncBasicData(@Body basicData: BasicData): ApiResponse<Flow<BasicData>>
+    suspend fun generateRandomData(): BasicData {
+        val response: HttpResponse = client.get("${BaseURL.BASE_URL}/random-data")
+        return response.body()
+    }
 }

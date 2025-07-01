@@ -7,6 +7,7 @@ import com.reringuy.sync.presentation.reducer.MainAppReducer
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEvents
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEvents.SetBasicData
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEvents.SetRandomData
+import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEvents.SyncData
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppState
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEffects
 import com.reringuy.sync.utils.OperationHandler
@@ -41,7 +42,7 @@ class MainAppViewmodel(
         "Miller",
         "Davis"
     )
-    
+
     init {
         loadBasicData()
     }
@@ -49,25 +50,45 @@ class MainAppViewmodel(
     private fun loadBasicData() {
         sendEvent(SetBasicData(OperationHandler.Loading))
         viewModelScope.launch {
-            repository.getAllBasicData().collect {
-                try {
+            try {
+                repository.getAllBasicData().collect {
                     sendEvent(SetBasicData(OperationHandler.Success(it.toMutableList())))
-                } catch (e: Exception) {
-                    sendEvent(SetBasicData(OperationHandler.Failure(e.message ?: "Unknown error")))
                 }
+            } catch (e: Exception) {
+                sendEvent(SetBasicData(OperationHandler.Failure(e.message ?: "Unknown error")))
             }
         }
     }
 
     fun generateRandomData() {
         sendEvent(SetRandomData(OperationHandler.Loading))
-        viewModelScope.launch { 
+        viewModelScope.launch {
             val basicData = BasicData(
                 firstName = firstNames.random(),
                 lastName = lastNames.random()
             )
-            repository.saveData(basicData).collect {
+            repository.saveLocalData(basicData).collect {
                 sendEvent(SetRandomData(it))
+            }
+        }
+    }
+
+    fun syncBasicData() {
+        sendEvent(SyncData(OperationHandler.Loading))
+        viewModelScope.launch {
+            if (state.value.basicData !is OperationHandler.Success)
+                sendEvent(SyncData(OperationHandler.Failure("No data to sync")))
+            else {
+                try {
+                    val basicDataList =
+                        (state.value.basicData as OperationHandler.Success<List<BasicData>>).data
+
+                    repository.syncData(basicDataList).collect {
+                        sendEvent(SyncData(it))
+                    }
+                } catch (e: Exception) {
+                    sendEvent(SyncData(OperationHandler.Failure(e.message ?: "Unknown error")))
+                }
             }
         }
     }

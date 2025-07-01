@@ -4,10 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.reringuy.sync.model.entity.BasicData
-import kotlin.time.ExperimentalTime
 
 @Dao
-@ExperimentalTime
 interface BasicDataDao {
     @Query("SELECT * FROM basicdata")
     suspend fun getAllBasicData(): List<BasicData>
