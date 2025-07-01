@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 fun getRoomDatabase(
     builder: RoomDatabase.Builder<SyncDatabase>
 ): SyncDatabase {

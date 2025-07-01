@@ -137,9 +137,10 @@ android {
     buildTypes {
         debug {
             aaptOptions.cruncherEnabled = false
+            isMinifyEnabled = false
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             aaptOptions.cruncherEnabled = true
         }
     }
