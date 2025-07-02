@@ -82,7 +82,6 @@ class MainAppViewmodel(
                 try {
                     val basicDataList =
                         (state.value.basicData as OperationHandler.Success<List<BasicData>>).data
-
                     repository.syncData(basicDataList).collect {
                         sendEvent(SyncData(it))
                     }
@@ -90,6 +89,14 @@ class MainAppViewmodel(
                     sendEvent(SyncData(OperationHandler.Failure(e.message ?: "Unknown error")))
                 }
             }
+        }
+    }
+
+    fun deleteAll() {
+        sendEvent(MainAppEvents.ResetBasicData)
+        viewModelScope.launch {
+            repository.deleteAllLocalData()
+            loadBasicData()
         }
     }
 

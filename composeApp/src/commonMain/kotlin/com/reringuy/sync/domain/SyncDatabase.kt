@@ -11,10 +11,11 @@ import com.reringuy.sync.model.entity.BasicData
 
 @Database(
     entities = [BasicData::class],
-    version = 2,
+    version = 3,
     exportSchema = true,
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 2, to = 3, spec = SyncDatabaseMigrations.Companion.VThree::class)
     ]
 )
 @ConstructedBy(AppDatabaseConstructor::class)

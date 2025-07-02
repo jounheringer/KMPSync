@@ -12,8 +12,8 @@ data class BasicData(
     var uid: Int? = null,
     var id: Int? = null,
     @ColumnInfo(name = "first_name")
-    val firstName: String?,
+    val firstName: String,
     @ColumnInfo(name = "last_name")
-    val lastName: String?,
+    val lastName: String,
     val synced: Boolean = false
 )

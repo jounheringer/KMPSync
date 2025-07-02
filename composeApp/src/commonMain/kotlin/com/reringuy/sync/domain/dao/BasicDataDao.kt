@@ -18,4 +18,7 @@ interface BasicDataDao {
 
     @Query("DELETE FROM basicdata WHERE id = :id")
     suspend fun deleteBasicData(id: Int)
+
+    @Query("DELETE FROM basicdata")
+    suspend fun deleteAllBasicData()
 }

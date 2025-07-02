@@ -13,6 +13,8 @@ class MainAppReducer() :
 
         data class SetRandomData(val randomData: OperationHandler<BasicData>) : MainAppEvents()
         data class SyncData(val randomData: OperationHandler<List<BasicData>>) : MainAppEvents()
+
+        data object ResetBasicData : MainAppEvents()
     }
 
 
@@ -38,6 +40,7 @@ class MainAppReducer() :
         event: MainAppEvents,
     ): Pair<MainAppState, MainAppEffects?> {
         return when (event) {
+            is MainAppEvents.ResetBasicData -> previousState.copy(basicData = Waiting) to null
             is MainAppEvents.SetBasicData -> {
                 when (event.basicData) {
                     is Failure ->
@@ -49,7 +52,7 @@ class MainAppReducer() :
                         )
 
                     is Success -> {
-                        if (previousState.basicData is Success){
+                        if (previousState.basicData is Success) {
                             val newDataList = previousState.basicData.data + event.basicData.data
                             previousState.copy(
                                 basicData = Success(newDataList),
@@ -87,7 +90,11 @@ class MainAppReducer() :
             is MainAppEvents.SyncData -> {
                 when (event.randomData) {
                     is Failure -> previousState.copy(loading = false) to ShowError(event.randomData.message)
-                    is Success<*> -> previousState.copy(loading = false, basicData = event.randomData) to null
+                    is Success<*> -> previousState.copy(
+                        loading = false,
+                        basicData = event.randomData
+                    ) to null
+
                     else -> previousState.copy(loading = true) to null
                 }
             }

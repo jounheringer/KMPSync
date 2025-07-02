@@ -38,7 +38,6 @@ fun AppWrapper(
         effects.collect {
             when(it) {
                 is MainAppReducer.MainAppEffects.ShowError -> {
-                    println("megaaaaaa")
                     println(it.message)
                 }
             }
@@ -46,7 +45,7 @@ fun AppWrapper(
     }
 
     LoadingComponent(state.loading) {
-        App(state, viewmodel::generateRandomData, viewmodel::syncBasicData)
+        App(state, viewmodel::generateRandomData, viewmodel::syncBasicData, viewmodel::deleteAll)
     }
 }
 @Composable
@@ -54,7 +53,8 @@ fun AppWrapper(
 fun App(
     state: MainAppState,
     onAddNewData: () -> Unit,
-    onSyncData: () -> Unit
+    onSyncData: () -> Unit,
+    onDeleteAll: () -> Unit
 ) {
     MaterialTheme {
         Column(
@@ -69,6 +69,7 @@ fun App(
             ) {
                 AppAddData(onAddNewData)
                 AppSyncData(onSyncData)
+                AppDeleteAllData(onDeleteAll)
             }
         }
     }
@@ -81,6 +82,7 @@ fun AppDataTable(
     when(data) {
         is OperationHandler.Failure -> {
             Text(text = data.message)
+            println("megaerrofoda -> ${data.message}")
         }
         is OperationHandler.Success<List<BasicData>> -> {
             val dataList = data.data
@@ -109,8 +111,8 @@ fun AppDataTable(
                     ) {
                         Text(text = "${it.id}")
                         Text(text = "${it.uid}")
-                        Text(text = "${it.firstName}")
-                        Text(text = "${it.lastName}")
+                        Text(text = it.firstName)
+                        Text(text = it.lastName)
                         Text(text = "${it.synced}")
                     }
                 }
@@ -132,5 +134,12 @@ fun AppAddData(onAddNewData: () -> Unit) {
 fun AppSyncData(onSyncData: () -> Unit) {
     Button(onClick = onSyncData) {
         Text(text = "Sync Data")
+    }
+}
+
+@Composable
+fun AppDeleteAllData(onDeleteAll: () -> Unit) {
+    Button(onClick = onDeleteAll) {
+        Text(text = "Delete All Data")
     }
 }
