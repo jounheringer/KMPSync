@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.bundles.ktor)
+            implementation(libs.kermit.log)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

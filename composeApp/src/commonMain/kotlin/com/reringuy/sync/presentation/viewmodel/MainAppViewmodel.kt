@@ -1,6 +1,7 @@
 package com.reringuy.sync.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.reringuy.sync.domain.repositories.BasicDataRepository
 import com.reringuy.sync.model.entity.BasicData
 import com.reringuy.sync.presentation.reducer.MainAppReducer
@@ -48,6 +49,7 @@ class MainAppViewmodel(
     }
 
     private fun loadBasicData() {
+        Logger.i("sl") {"aaaaaaaa"}
         sendEvent(SetBasicData(OperationHandler.Loading))
         viewModelScope.launch {
             try {
