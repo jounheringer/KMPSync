@@ -52,6 +52,8 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.room.runtime.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.work.runtime)
+            implementation(libs.work.runtime.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

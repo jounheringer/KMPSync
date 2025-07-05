@@ -5,6 +5,8 @@ import ComposeApp
 struct iOSApp: App {
     init() {
         InitKoinKt.doInitKoin()
+        BackgroundSyncManager.shared.registerBackgroundTask()
+        BackgroundSyncManager.shared.scheduleAppRefresh()
     }
     var body: some Scene {
         WindowGroup {
