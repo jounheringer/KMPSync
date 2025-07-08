@@ -13,9 +13,7 @@ import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppState
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEffects
 import com.reringuy.sync.utils.OperationHandler
 import kotlinx.coroutines.launch
-import org.koin.core.annotation.Factory
 
-@Factory
 class MainAppViewmodel(
     private val repository: BasicDataRepository,
 ) : BaseViewModel<MainAppState, MainAppEvents, MainAppEffects>(
@@ -49,8 +47,9 @@ class MainAppViewmodel(
     }
 
     private fun loadBasicData() {
-        Logger.i("sl") {"aaaaaaaa"}
+        Logger.i("sl") { "aaaaaaaa" }
         sendEvent(SetBasicData(OperationHandler.Loading))
+        Logger.i("setData")
         viewModelScope.launch {
             try {
                 repository.getAllBasicData().collect {
@@ -76,8 +75,10 @@ class MainAppViewmodel(
     }
 
     fun syncBasicData() {
+        Logger.i("setData") { "bla" }
         sendEvent(SyncData(OperationHandler.Loading))
         viewModelScope.launch {
+            Logger.i("setData.processing") { "bla" }
             if (state.value.basicData !is OperationHandler.Success)
                 sendEvent(SyncData(OperationHandler.Failure("No data to sync")))
             else {
@@ -85,9 +86,11 @@ class MainAppViewmodel(
                     val basicDataList =
                         (state.value.basicData as OperationHandler.Success<List<BasicData>>).data
                     repository.syncData(basicDataList).collect {
+                        Logger.i("setData.sucess") { "bla" }
                         sendEvent(SyncData(it))
                     }
                 } catch (e: Exception) {
+                    Logger.i("setData.error") { "bla" }
                     sendEvent(SyncData(OperationHandler.Failure(e.message ?: "Unknown error")))
                 }
             }

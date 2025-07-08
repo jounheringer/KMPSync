@@ -4,7 +4,7 @@ import ComposeApp
 @main
 struct iOSApp: App {
     init() {
-        InitKoinKt.doInitKoin()
+        Koin_iosKt.startKoin()
         BackgroundSyncManager.shared.registerBackgroundTask()
         BackgroundSyncManager.shared.scheduleAppRefresh()
     }

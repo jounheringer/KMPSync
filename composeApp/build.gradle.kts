@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotzilla)
 }
 
 repositories {
@@ -97,7 +98,8 @@ kotlin {
 
 ksp {
     arg("koin.generated", "true")
-    arg("KOIN_DEFAULT_MODULE", "true")
+    arg("KOIN_DEFAULT_MODULE", "false")
+    arg("KOIN_CONFIG_CHECK","true")
 }
 
 room {
@@ -106,14 +108,11 @@ room {
 
 dependencies {
     add("kspCommonMainMetadata", libs.ksp.compiler)
-
     add("kspAndroid", libs.room.compiler)
-
     add("kspIosSimulatorArm64", libs.room.compiler)
-
     add("kspIosX64", libs.room.compiler)
-
     add("kspIosArm64", libs.room.compiler)
+    implementation(libs.kotzilla.ktor3)
 }
 
 android {
@@ -141,6 +140,7 @@ android {
         debug {
             aaptOptions.cruncherEnabled = false
             isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8000\"")
         }
         release {
             isMinifyEnabled = true

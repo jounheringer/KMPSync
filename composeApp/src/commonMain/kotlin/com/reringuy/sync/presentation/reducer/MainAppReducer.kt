@@ -1,5 +1,6 @@
 package com.reringuy.sync.presentation.reducer
 
+import co.touchlab.kermit.Logger
 import com.reringuy.sync.model.entity.BasicData
 import com.reringuy.sync.presentation.reducer.MainAppReducer.MainAppEffects.*
 import com.reringuy.sync.utils.OperationHandler
@@ -42,6 +43,7 @@ class MainAppReducer() :
         return when (event) {
             is MainAppEvents.ResetBasicData -> previousState.copy(basicData = Waiting) to null
             is MainAppEvents.SetBasicData -> {
+                Logger.i("setData") { "event: $event \n type: ${event::class.simpleName}" }
                 when (event.basicData) {
                     is Failure ->
                         previousState.copy(

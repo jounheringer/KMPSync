@@ -1,10 +1,9 @@
-package com.reringuy.sync
+package com.reringuy.sync.modules
 
-import com.reringuy.sync.modules.getMainModule
 import org.koin.core.context.startKoin
 
-@Suppress("UNUSED")
-fun initKoin() {
+@Suppress("unused")
+actual fun startKoin() {
     startKoin {
         modules(
             getMainModule()
