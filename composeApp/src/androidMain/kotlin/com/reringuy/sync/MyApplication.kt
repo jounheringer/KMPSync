@@ -1,6 +1,7 @@
 package com.reringuy.sync
 
 import android.app.Application
+import com.reringuy.sync.modules.backgroundModule
 import com.reringuy.sync.modules.getMainModule
 import io.kotzilla.sdk.analytics.koin.analytics
 import org.koin.android.ext.koin.androidContext
@@ -12,7 +13,8 @@ class MyApplication : Application() {
         startKoin {
             androidContext(this@MyApplication)
             modules(
-                getMainModule()
+                getMainModule(),
+                backgroundModule()
             )
             analytics()
         }

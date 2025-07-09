@@ -1,3 +1,5 @@
 package com.reringuy.sync.backgroundSync
 
-expect fun performBackgroundSync()
+expect class BackgroundSyncScheduler {
+    suspend fun scheduleBackgroundSync()
+}

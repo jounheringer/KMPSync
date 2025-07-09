@@ -13,5 +13,9 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Precisamos de acesso à rede local para conectar ao servidor local.</string>
+    <key>NSBonjourServices</key>
+    <array/>
 </dict>
 </plist>

@@ -23,9 +23,9 @@ class BackgroundSyncManager {
     
     func scheduleAppRefresh() {
         let request = BGAppRefreshTaskRequest(identifier: taskIdentifier)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 5 * 60) // 5 mins
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 1 * 60) // 5 mins
         do {
-            print("MIAU")
+            print(request)
             try BGTaskScheduler.shared.submit(request)
         } catch {
             print("NOT MIAU")
@@ -35,17 +35,20 @@ class BackgroundSyncManager {
     
     private func handleAppRefresh(task: BGAppRefreshTask) {
         scheduleAppRefresh()
-        
+    
         let operation = BlockOperation {
-            ComposeApp.BackgroundSyncScheduler_iosKt.performBackgroundSync()
+            ComposeApp.BackgroundSyncSchedulerWrapper().triggerSync()
         }
         
         task.expirationHandler = {
             operation.cancel()
         }
         
+        operation.completionBlock = {
+            task.setTaskCompleted(success: !operation.isCancelled)
+        }
+        
         OperationQueue().addOperation(operation)
         
-        task.setTaskCompleted(success: true)
     }
 }

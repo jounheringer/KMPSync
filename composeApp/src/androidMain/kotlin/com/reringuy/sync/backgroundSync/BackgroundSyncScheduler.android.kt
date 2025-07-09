@@ -1,20 +1,27 @@
 package com.reringuy.sync.backgroundSync
 
-import android.content.Context
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
+import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.getValue
 
-actual fun performBackgroundSync() {
-    println("MEGA MIAU")
+actual class BackgroundSyncScheduler(private val useCase: BackgroundSyncUseCase) {
+    actual suspend fun scheduleBackgroundSync() {
+        Logger.i("miau.2") { "Miau au au" }
+        useCase.syncLocalData()
+    }
 }
 
-class BackgroundSyncWorker(context: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(context, workerParams) {
-    override suspend fun doWork(): Result {
-        println("MEGA MIAU2")
-        performBackgroundSync()
+internal class BackgroundSyncSchedulerWrapper() : KoinComponent {
+    private val scheduler: BackgroundSyncScheduler by inject<BackgroundSyncScheduler>()
 
-        return Result.success()
+    fun triggerSync() {
+        CoroutineScope(Dispatchers.IO).launch {
+            Logger.i("miau.1") { "Miau au" }
+            scheduler.scheduleBackgroundSync()
+        }
     }
-
 }

@@ -2,5 +2,5 @@ package com.reringuy.sync.utils
 
 actual object CustomEnvironment {
     actual val baseUrl: String
-        get() = "http://127.0.0.1:8000"
+        get() = "http://192.168.101.62:8000"
 }
